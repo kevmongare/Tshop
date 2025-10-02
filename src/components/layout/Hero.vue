@@ -1,11 +1,11 @@
 <template>
-  <section class="relative h-screen bg-[url('./bg.jpg')] bg-cover bg-center">
+  <section class="relative h-screen bg-[url('./bg.jpg')] bg-fixed bg-cover bg-center">
     <!-- Animated Background Elements -->
-    <div class="absolute inset-0 opacity-10 bg-black/90 h-screen"></div>
-      <!-- <div class="absolute top-1/4 left-1/4 w-72 h-72 bg-yellow-400 rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
+    <div class="absolute inset-0 opacity-10 bg-black  h-screen">
+      <div class="absolute top-1/4 left-1/4 w-72 h-72 bg-black rounded-full mix-blend-multiply filter blur-2xl animate-pulse"></div>
       <div class="absolute top-1/3 right-1/4 w-72 h-72 bg-purple-400 rounded-full mix-blend-multiply filter blur-xl animate-pulse animation-delay-2000"></div>
       <div class="absolute bottom-1/4 left-1/2 w-72 h-72 bg-pink-400 rounded-full mix-blend-multiply filter blur-xl animate-pulse animation-delay-4000"></div>
-    </div> -->
+    </div>
 
     <!-- Content -->
     <div class="relative max-w-7xl mx-auto px-6 h-full flex items-center justify-center">
@@ -21,7 +21,7 @@
         </h1>
 
         <!-- Subheading -->
-        <p class="text-xl md:text-2xl text-gray-300 max-w-2xl mx-auto leading-relaxed font-light">
+        <p class="text-xl md:text-2xl text-gray-300 bg-black/50 max-w-2xl mx-auto leading-relaxed font-light">
           Discover the finest African luxury merchandise. 
           <span class="text-yellow-400 font-semibold">Authentic</span>, 
           <span class="text-yellow-400 font-semibold">Elegant</span>, 
@@ -43,7 +43,7 @@
         </div>
 
         <!-- Stats -->
-        <div class="flex justify-center items-center space-x-8 pt-8 text-gray-400">
+        <div class="flex justify-center items-center space-x-8 pt-8 text-gray-400 bg-black/30">
           <div class="text-center">
             <div class="text-2xl font-bold text-white">500+</div>
             <div class="text-sm">Premium Products</div>

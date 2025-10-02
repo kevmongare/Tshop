@@ -2,15 +2,15 @@
 import { ref, onMounted } from 'vue';
 import African from '/Africanshirt.webp';
 
-
 const imageVisible = ref(false);
 const textVisible = ref(false);
 
 function observeElement(el: Element | null, callback: () => void) {
   if (!el) return;
   const observer = new IntersectionObserver(
-    ([entry]) => {
-      if (entry.isIntersecting) {
+    (entries: IntersectionObserverEntry[]) => {
+      const entry = entries[0];
+      if (entry && entry.isIntersecting) {
         callback();
         observer.disconnect();
       }
@@ -29,7 +29,6 @@ onMounted(() => {
   });
 });
 </script>
-
 <template>
   
   <section class="max-w-7xl mx-auto px-6 py-20 md:py-32">

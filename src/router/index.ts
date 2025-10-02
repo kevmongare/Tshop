@@ -48,7 +48,49 @@ const router = createRouter({
       path: '/about',
       name: 'About',
       component: () => import('../views/AboutUs.vue'),
-    }
+    },
+    {
+      path: '/cart',
+      name: 'Cart',
+      component: () => import('../views/Cart.vue'),
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/product/:id',
+      name: 'ProductDetail',
+      component: () => import('../views/ProductDetail.vue'),
+    },
+    {
+        path: '/checkout',
+        name: 'Checkout',
+        component: () => import('../views/CheckoutView.vue'),
+        meta: { requiresAuth: true }
+      },
+      {
+        path: '/admin/users',
+        name: 'AdminUsers',
+        component: () => import('../views/admin/Users.vue'),
+        meta: { requiresAuth: true, requiresAdmin: true }
+      },
+      {
+        path: '/orders',
+        name: 'Orders',
+        component: () => import('../views/Orders.vue'), // You'll need to create this
+        meta: { requiresAuth: true }
+      },
+      {
+        path: '/orders',
+        name: 'Orders',
+        component: () => import('../views/Orders.vue'),
+        meta: { requiresAuth: true }
+      },
+      {
+        path: '/admin/orders',
+        name: 'AdminOrders',
+        component: () => import('../views/admin/Orders.vue'),
+        meta: { requiresAuth: true, requiresAdmin: true }
+      },
+      
   ],
 });
 

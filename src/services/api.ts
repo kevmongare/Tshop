@@ -11,6 +11,7 @@ const api = axios.create({
   timeout: 10000,
 });
 
+
 // Enhanced request interceptor with better token handling
 api.interceptors.request.use(
   (config) => {
@@ -112,6 +113,13 @@ export interface SignupRequest {
   password: string;
 }
 
+export interface Category {
+  id: number;
+  name: string;
+  description: string;
+  created_at?: string;
+}
+
 export interface Product {
   id: number;
   name: string;
@@ -119,6 +127,8 @@ export interface Product {
   price: number;
   stock: number;
   image: string;
+  category_id: number;
+  category?: Category;
   created_at?: string;
 }
 
@@ -128,6 +138,52 @@ export interface CreateProductRequest {
   price: number;
   stock: number;
   image?: string;
+  category_id: number;
+}
+
+export interface UpdateProductRequest {
+  name?: string;
+  description?: string;
+  price?: number;
+  stock?: number;
+  image?: string;
+  category_id?: number;
+}
+
+// Order related interfaces
+export interface Order {
+  id: number;
+  user_id: number;
+  user?: User;
+  total: number;
+  status: 'pending' | 'confirmed' | 'shipped' | 'delivered' | 'cancelled';
+  mpesa_receipt?: string;
+  phone_number?: string;
+  created_at: string;
+  order_items?: OrderItem[];
+}
+
+export interface OrderItem {
+  id: number;
+  order_id: number;
+  product_id: number;
+  product?: Product;
+  quantity: number;
+  price: number;
+}
+
+export interface CreateOrderRequest {
+  items: OrderItemRequest[];
+  phone_number?: string;
+}
+
+export interface OrderItemRequest {
+  product_id: number;
+  quantity: number;
+}
+
+export interface UpdateOrderStatusRequest {
+  status: Order['status'];
 }
 
 export const authAPI = {
@@ -176,8 +232,9 @@ export const authAPI = {
 
 export const productAPI = {
   // Public product endpoints (no auth required)
-  getPublicProducts: async (): Promise<Product[]> => {
-    const response = await api.get('/products');
+  getPublicProducts: async (categoryId?: number): Promise<Product[]> => {
+    const url = categoryId ? `/products?category=${categoryId}` : '/products';
+    const response = await api.get(url);
     return response.data;
   },
 
@@ -204,7 +261,7 @@ export const productAPI = {
     return response.data;
   },
 
-  updateProduct: async (id: number, product: Partial<Product>): Promise<Product> => {
+  updateProduct: async (id: number, product: UpdateProductRequest): Promise<Product> => {
     const response = await api.put(`/admin/products/${id}`, product);
     return response.data;
   },
@@ -212,6 +269,122 @@ export const productAPI = {
   deleteProduct: async (id: number): Promise<void> => {
     await api.delete(`/admin/products/${id}`);
   },
+
+  // Category endpoints
+  getCategories: async (): Promise<Category[]> => {
+    const response = await api.get('/categories');
+    return response.data;
+  },
+
+  getProductsByCategory: async (categoryId: number): Promise<Product[]> => {
+    const response = await api.get(`/products?category=${categoryId}`);
+    return response.data;
+  },
 };
+
+export const orderAPI = {
+  // User order endpoints
+  createOrder: async (orderData: CreateOrderRequest): Promise<Order> => {
+    console.log('🔄 Creating order via API:', orderData);
+    const response = await api.post('/orders', orderData);
+    console.log('✅ Order created successfully:', response.data);
+    return response.data.data;
+  },
+
+  getUserOrders: async (): Promise<Order[]> => {
+    const response = await api.get('/orders');
+    return response.data;
+  },
+
+  getOrder: async (id: number): Promise<Order> => {
+    const response = await api.get(`/orders/${id}`);
+    return response.data;
+  },
+
+  // Admin order endpoints
+  getOrders: async (): Promise<Order[]> => {
+    const response = await api.get('/admin/orders');
+    return response.data;
+  },
+
+  updateOrderStatus: async (id: number, status: UpdateOrderStatusRequest): Promise<void> => {
+    await api.put(`/admin/orders/${id}/status`, status);
+  },
+
+  // Admin user endpoints
+  getUsers: async (): Promise<User[]> => {
+    const response = await api.get('/admin/users');
+    return response.data;
+  },
+};
+
+export const normalizePhone = (num: string): string => {
+  let cleaned = num.trim();
+  if (cleaned.startsWith("07")) {
+    return "254" + cleaned.substring(1);
+  } else if (cleaned.startsWith("+254")) {
+    return cleaned.substring(1);
+  } else if (cleaned.startsWith("254")) {
+    return cleaned;
+  }
+  return cleaned;
+};
+
+export interface MpesaResponse {
+  success: boolean;
+  message: string;
+  data?: any;
+}
+
+export class PaymentService {
+  static async processMpesaPayment(phone: string, amount: number): Promise<MpesaResponse> {
+    const normalizedPhone = normalizePhone(phone);
+    
+    // Ensure amount is an integer (M-Pesa expects whole numbers)
+    const amountInt = Math.round(amount);
+
+    try {
+      const res = await fetch("https://mpesaapi-sbss.onrender.com/mpesa/pay", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          phone: normalizedPhone,
+          amount: amountInt,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        return {
+          success: true,
+          message: "Payment initiated successfully. Check your phone to complete the transaction.",
+          data
+        };
+      } else {
+        return {
+          success: false,
+          message: data.message || "Payment failed. Please try again.",
+          data
+        };
+      }
+    } catch (error) {
+      console.error('MPesa payment error:', error);
+      return {
+        success: false,
+        message: "Network error. Please check your connection and try again.",
+      };
+    }
+  }
+
+  static validatePhone(phone: string): string | null {
+    const normalized = normalizePhone(phone);
+    const phoneRegex = /^254[17]\d{8}$/;
+    if (!phoneRegex.test(normalized)) {
+      return "Please enter a valid Kenyan phone number";
+    }
+    return null;
+  }
+}
 
 export default api;

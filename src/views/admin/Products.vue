@@ -77,7 +77,8 @@
         <!-- Table Header -->
         <div class="px-6 py-4 bg-gray-50 border-b border-gray-200/60">
           <div class="grid grid-cols-12 gap-4 text-sm font-medium text-gray-700 uppercase tracking-wider">
-            <div class="col-span-5">Product</div>
+            <div class="col-span-3">Product</div>
+            <div class="col-span-2">Category</div>
             <div class="col-span-2">Price</div>
             <div class="col-span-2">Stock</div>
             <div class="col-span-3 text-right">Actions</div>
@@ -93,16 +94,22 @@
           >
             <div class="grid grid-cols-12 gap-4 items-center">
               <!-- Product Info -->
-              <div class="col-span-5">
+              <div class="col-span-3">
                 <div class="flex items-center space-x-4">
-                  <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl flex items-center justify-center overflow-hidden">
+                  <div class="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl flex items-center justify-center overflow-hidden">
                     <img 
-                      v-if="product.image" 
+                      v-if="product.image && product.image.startsWith('data:image')" 
                       :src="product.image" 
                       :alt="product.name"
                       class="w-full h-full object-cover"
                     >
-                    <svg v-else class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <img 
+                      v-else-if="product.image" 
+                      :src="product.image" 
+                      :alt="product.name"
+                      class="w-full h-full object-cover"
+                    >
+                    <svg v-else class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                             d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                     </svg>
@@ -112,6 +119,14 @@
                     <p class="text-sm text-gray-500 line-clamp-1">{{ product.description }}</p>
                   </div>
                 </div>
+              </div>
+
+              <!-- Category -->
+              <div class="col-span-2">
+                <span v-if="product.category" class="inline-flex items-center px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">
+                  {{ product.category.name }}
+                </span>
+                <span v-else class="text-sm text-gray-500">No category</span>
               </div>
 
               <!-- Price -->
@@ -213,6 +228,21 @@
                     placeholder="Describe the product..."
                   ></textarea>
                 </div>
+
+                <!-- Category Selection -->
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                  <select
+                    v-model="productForm.category_id"
+                    required
+                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-colors duration-200"
+                  >
+                    <option value="">Select a category</option>
+                    <option v-for="category in categories" :key="category.id" :value="category.id">
+                      {{ category.name }}
+                    </option>
+                  </select>
+                </div>
               </div>
 
               <!-- Right Column -->
@@ -244,15 +274,49 @@
                   </div>
                 </div>
 
+                <!-- Image Upload Section -->
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Image URL</label>
-                  <input
-                    v-model="productForm.image"
-                    type="url"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-colors duration-200"
-                    placeholder="https://example.com/image.jpg"
-                  />
-                  <p class="text-xs text-gray-500 mt-2">Optional: Provide a URL for the product image</p>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Product Image</label>
+                  
+                  <!-- Image Preview -->
+                  <div v-if="imagePreview" class="mb-4">
+                    <img :src="imagePreview" alt="Image preview" class="w-32 h-32 object-cover rounded-lg border border-gray-300">
+                  </div>
+
+                  <!-- File Upload -->
+                  <div class="flex items-center justify-center w-full">
+                    <label for="image-upload" class="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors duration-200">
+                      <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                        <svg class="w-8 h-8 mb-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+                        </svg>
+                        <p class="mb-2 text-sm text-gray-500">
+                          <span class="font-semibold">Click to upload</span> or drag and drop
+                        </p>
+                        <p class="text-xs text-gray-500">PNG, JPG, JPEG (MAX. 2MB)</p>
+                      </div>
+                      <input 
+                        id="image-upload" 
+                        type="file" 
+                        class="hidden" 
+                        accept="image/*"
+                        @change="handleImageUpload"
+                      />
+                    </label>
+                  </div>
+
+                  <!-- Or URL Input -->
+                  <div class="mt-4">
+                    <p class="text-sm text-gray-600 mb-2 text-center">- OR -</p>
+                    <input
+                      v-model="productForm.image"
+                      type="url"
+                      class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-colors duration-200"
+                      placeholder="https://example.com/image.jpg"
+                      @input="clearImagePreview"
+                    />
+                    <p class="text-xs text-gray-500 mt-2">Enter image URL or upload a file</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -286,24 +350,27 @@ import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '../../store/auth';
 import { productAPI } from '../../services/api';
-import type { Product } from '../../services/api';
+import type { Product, Category } from '../../services/api';
 
 const authStore = useAuthStore();
 const router = useRouter();
 
 const products = ref<Product[]>([]);
+const categories = ref<Category[]>([]);
 const loading = ref(false);
 const submitting = ref(false);
 const showAddModal = ref(false);
 const showEditModal = ref(false);
 const editingProductId = ref<number | null>(null);
+const imagePreview = ref<string | null>(null);
 
 const productForm = ref({
   name: '',
   description: '',
   price: 0,
   stock: 0,
-  image: ''
+  image: '',
+  category_id: 0
 });
 
 function handleLogout() {
@@ -317,8 +384,10 @@ function resetForm() {
     description: '',
     price: 0,
     stock: 0,
-    image: ''
+    image: '',
+    category_id: 0
   };
+  imagePreview.value = null;
   editingProductId.value = null;
 }
 
@@ -329,9 +398,70 @@ function closeModal() {
 }
 
 function editProduct(product: Product) {
-  productForm.value = { ...product };
+  productForm.value = { 
+    name: product.name,
+    description: product.description,
+    price: product.price,
+    stock: product.stock,
+    image: product.image,
+    category_id: product.category_id || 0
+  };
   editingProductId.value = product.id;
+  
+  // Set image preview if image exists
+  if (product.image) {
+    if (product.image.startsWith('data:image')) {
+      imagePreview.value = product.image;
+    } else {
+      imagePreview.value = product.image;
+    }
+  } else {
+    imagePreview.value = null;
+  }
+  
   showEditModal.value = true;
+}
+
+function clearImagePreview() {
+  imagePreview.value = null;
+}
+
+function handleImageUpload(event: Event) {
+  const input = event.target as HTMLInputElement;
+  const file = input.files?.[0];
+  
+  if (!file) return;
+
+  // Validate file type
+  if (!file.type.startsWith('image/')) {
+    alert('Please select an image file (PNG, JPG, JPEG)');
+    return;
+  }
+
+  // Validate file size (2MB max)
+  if (file.size > 2 * 1024 * 1024) {
+    alert('Image size should be less than 2MB');
+    return;
+  }
+
+  // Create file reader to convert image to base64
+  const reader = new FileReader();
+  
+  reader.onload = (e) => {
+    const base64String = e.target?.result as string;
+    
+    // Set the base64 string to the image field
+    productForm.value.image = base64String;
+    
+    // Set preview
+    imagePreview.value = base64String;
+  };
+  
+  reader.onerror = () => {
+    alert('Error reading file. Please try again.');
+  };
+  
+  reader.readAsDataURL(file);
 }
 
 async function fetchProducts() {
@@ -355,18 +485,46 @@ async function fetchProducts() {
   }
 }
 
+async function fetchCategories() {
+  try {
+    console.log('🔄 Fetching categories...');
+    const data = await productAPI.getCategories();
+    categories.value = data;
+    console.log('✅ Categories fetched successfully:', categories.value.length, 'categories');
+  } catch (error: any) {
+    console.error('❌ Failed to fetch categories:', error);
+    alert('Failed to load categories. Please try again.');
+  }
+}
+
 async function submitProduct() {
   submitting.value = true;
   
   try {
     let response;
     
+    // Prepare the product data
+    const productData = {
+      ...productForm.value,
+      // Ensure price, stock, and category_id are numbers
+      price: Number(productForm.value.price),
+      stock: Number(productForm.value.stock),
+      category_id: Number(productForm.value.category_id)
+    };
+
+    // Validate category
+    if (!productData.category_id || productData.category_id === 0) {
+      alert('Please select a category');
+      submitting.value = false;
+      return;
+    }
+
     if (editingProductId.value) {
       console.log('🔄 Updating product:', editingProductId.value);
-      response = await productAPI.updateProduct(editingProductId.value, productForm.value);
+      response = await productAPI.updateProduct(editingProductId.value, productData);
     } else {
       console.log('🔄 Creating new product');
-      response = await productAPI.createProduct(productForm.value);
+      response = await productAPI.createProduct(productData);
     }
     
     console.log('✅ Product saved successfully');
@@ -424,8 +582,8 @@ onMounted(async () => {
     return;
   }
 
-  console.log('✅ User is authenticated admin, fetching products...');
-  await fetchProducts();
+  console.log('✅ User is authenticated admin, fetching data...');
+  await Promise.all([fetchProducts(), fetchCategories()]);
 });
 </script>
 
