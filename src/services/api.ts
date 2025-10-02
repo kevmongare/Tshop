@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:8080/api';
+const API_BASE_URL = 'https://tshopbackend.onrender.com/api';
 
 // Create axios instance with better configuration
 const api = axios.create({
