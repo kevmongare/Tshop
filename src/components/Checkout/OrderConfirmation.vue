@@ -86,13 +86,13 @@ interface Props {
   order: Order & { payment_method?: string; delivery_method?: string } | null;
 }
 
-interface Emits {
+// Keep emits typing without assigning to a variable
+defineEmits<{
   (e: 'continue-shopping'): void;
   (e: 'view-orders'): void;
-}
+}>();
 
 const props = defineProps<Props>();
-const emit = defineEmits<Emits>();
 
 const getPaymentMethodDisplay = (method: string | undefined) => {
   if (method === 'mpesa') return 'M-Pesa';

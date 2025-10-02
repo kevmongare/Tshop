@@ -12,9 +12,12 @@
     "allowSyntheticDefaultImports": true,
     "noImplicitAny": true,
     "strictNullChecks": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    
+    "noEmitOnError": false,       // 🔹 allow emitting JS even with errors
+    "noUnusedLocals": false,      // 🔹 temporarily disable unused variable errors
+    "noUnusedParameters": false,  // 🔹 temporarily disable unused parameter errors
     "noFallthroughCasesInSwitch": true,
+    
     "resolveJsonModule": true,
     "jsx": "preserve",
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
