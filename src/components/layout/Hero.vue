@@ -1,5 +1,5 @@
 <template>
-  <section class="relative h-screen bg-[url('./bg.jpg')] bg-fixed bg-cover bg-center">
+  <section class="relative h-screen bg-[url('https://tshop-lorx.vercel.app/bg.jpg')] bg-fixed bg-cover bg-center">
     <!-- Animated Background Elements -->
     <div class="absolute inset-0 opacity-10 bg-black  h-screen">
       <div class="absolute top-1/4 left-1/4 w-72 h-72 bg-black rounded-full mix-blend-multiply filter blur-2xl animate-pulse"></div>
