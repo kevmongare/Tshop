@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen grid grid-cols-1 md:grid-cols-2">
     <!-- Left side: background image or info -->
-    <div class="hidden md:flex items-center justify-center bg-yellow-600 text-white p-10">
+    <div class="hidden md:flex items-center justify-center bg-black text-white p-10">
       <div class="text-center">
         <h2 class="text-4xl font-bold mb-4">Join Us Today</h2>
         <p class="text-lg">Create your account and explore the shop.</p>
@@ -86,7 +86,7 @@
           <button
             type="submit"
             :disabled="loading"
-            class="w-full bg-yellow-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-yellow-700 focus:ring-2 focus:ring-yellow-500 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+            class="w-full bg-black text-white font-semibold py-2 px-4 rounded-md hover:bg-yellow-700 focus:ring-2 focus:ring-yellow-500 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <span v-if="loading">Creating Account...</span>
             <span v-else>Sign Up</span>
@@ -95,9 +95,9 @@
 
         <p class="text-sm text-center text-gray-600">
           Already have an account?
-          <router-link to="/login" class="text-yellow-600 hover:underline font-medium">Log in</router-link>
+          <router-link to="/login" class="text-black hover:underline font-medium">Log in</router-link>
         </p>
-        <router-link to="/" class="hover:text-yellow-600 underline font-medium">Return to HomePage</router-link>
+        <router-link to="/" class="hover:text-black underline font-medium">Return to HomePage</router-link>
       </div>
     </div>
   </div>

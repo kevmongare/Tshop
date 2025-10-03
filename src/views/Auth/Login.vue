@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen grid grid-cols-1 md:grid-cols-2">
     <!-- Left Side: Background / Image -->
-    <div class="hidden md:flex items-center justify-center bg-yellow-600 text-white">
+    <div class="hidden md:flex items-center justify-center bg-black text-white">
       <div class="text-center p-10">
         <h2 class="text-4xl font-bold mb-4">Welcome Back!</h2>
         <p class="text-lg">Log in to manage your store and orders.</p>
@@ -51,7 +51,7 @@
           <button
             type="submit"
             :disabled="loading"
-            class="w-full bg-yellow-600 text-white py-2 px-4 rounded-md hover:bg-yellow-700 font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+            class="w-full bg-black text-white py-2 px-4 rounded-md hover:bg-yellow-700 font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <span v-if="loading">Logging in...</span>
             <span v-else>Login</span>
@@ -60,9 +60,9 @@
 
         <p class="text-center text-sm text-gray-600">
           Don't have an account?
-          <router-link to="/signup" class="text-yellow-600 hover:underline">Sign up</router-link>
+          <router-link to="/signup" class="text-black hover:underline">Sign up</router-link>
         </p>
-        <router-link to="/" class="hover:text-yellow-600 underline font-medium">Return to HomePage</router-link>
+        <router-link to="/" class="hover:text-black underline font-medium">Return to HomePage</router-link>
       </div>
     </div>
   </div>

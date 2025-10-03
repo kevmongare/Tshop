@@ -1,10 +1,10 @@
 <template>
-  <footer class="bg-gray-900 text-gray-300 pt-12 pb-6">
+  <footer class="bg-black text-gray-300 pt-12 pb-6">
     <div class="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-10">
       
       <!-- Brand -->
       <div>
-        <h2 class="text-2xl font-bold text-white">ShopVue</h2>
+        <h2 class="text-2xl font-bold text-white">Tshop</h2>
         <p class="mt-3 text-sm leading-relaxed">
           Discover the latest fashion, gadgets, and essentials at unbeatable prices.
           Quality products delivered right to your doorstep.
@@ -43,7 +43,7 @@
           <input 
             type="email" 
             placeholder="Enter your email" 
-            class="w-full px-4 py-2 rounded-lg text-gray-800 focus:outline-none"
+            class="w-full px-4 py-2 rounded-lg text-gray-800 focus:outline-none border-gray-200 border text-white"
           />
           <button 
             type="submit" 
@@ -58,7 +58,7 @@
 
     <!-- Bottom Bar -->
     <div class="border-t border-gray-700 mt-10 pt-4 text-center text-sm">
-      <p>&copy; {{ new Date().getFullYear() }} ShopVue. All rights reserved.</p>
+      <p>&copy; {{ new Date().getFullYear() }} Tshop. All rights reserved.</p>
       <div class="flex justify-center space-x-6 mt-3">
         <a href="#" class="hover:text-white transition">🐦</a>
         <a href="#" class="hover:text-white transition">📘</a>
